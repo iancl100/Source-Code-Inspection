@@ -2,52 +2,70 @@ package br.calebe.ticketmachine.core;
 
 import br.calebe.ticketmachine.exception.PapelMoedaInvalidaException;
 import br.calebe.ticketmachine.exception.SaldoInsuficienteException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Gustavo Dechechi
  */
 public class TicketMachine {
-    
+
     protected int valorTicket;
-    protected int saldoMaquina;
-    protected double[] papelMoeda = {0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 50, 100};
+    protected double saldoMaquina;
+    protected ArrayList<PapelMoeda> papeisMoeda;
 
     public TicketMachine(int valor) {
         System.out.println("Aguarde alguns instantes...");
         this.valorTicket = valor;
         this.saldoMaquina = 0;
+        papeisMoeda.add(new PapelMoeda(0.1,0));
+        papeisMoeda.add(new PapelMoeda(0.25,0));
+        papeisMoeda.add(new PapelMoeda(0.5,0));
+        papeisMoeda.add(new PapelMoeda(1,0));
+        papeisMoeda.add(new PapelMoeda(2,0));
+        papeisMoeda.add(new PapelMoeda(5,0));
+        papeisMoeda.add(new PapelMoeda(10,0));
+        papeisMoeda.add(new PapelMoeda(20,0));
+        papeisMoeda.add(new PapelMoeda(50,0));
+        papeisMoeda.add(new PapelMoeda(100,0));
     }
 
-    public void inserir(int quantia) throws PapelMoedaInvalidaException {
+    public void inserir(double quantia) {
         boolean achou = false;
-        
-        //Comissao - O Sistema não adiciona o valor ao saldo disponível.
-        for (int i = 0; i < papelMoeda.length && !achou; i++) {
-            if (papelMoeda[i] == quantia) {
+        for (PapelMoeda papelMoeda : papeisMoeda) {
+            if (papelMoeda.getValor() == quantia) {
                 achou = true;
+                papelMoeda.setQuantidade(1);
             }
         }
-        //Controle - não tem nada sendo comparado a  variavel "achou".
-        //Inicialização - a variavel "quantia" não foi inicializado.
-        if (!achou) {
-            throw new PapelMoedaInvalidaException("Papel moeda Invalida!!");
+        if (achou != true) {
+            try {
+                throw new PapelMoedaInvalidaException("Papel moeda Invalida!!");
+            } catch (PapelMoedaInvalidaException ex) {
+                Logger.getLogger(TicketMachine.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            this.saldoMaquina += quantia;
         }
-        this.saldoMaquina += quantia;
     }
 
-    public int getSaldo() {
+    public double getSaldo() {
         return this.saldoMaquina;
     }
 
-    //Comissão - não retorna nada ao método getTroco().
-    public void getTroco(){
-        double troco = saldoMaquina - valorTicket;
+    public double getTroco() {
+        return saldoMaquina - valorTicket;
     }
-    
-    public void imprimir() throws SaldoInsuficienteException {
-        if (saldoMaquina < valorTicket) {
-            throw new SaldoInsuficienteException("Saldo insuficiente!");
+
+    public void imprimir() {
+        if (saldoMaquina < valorTicket) {           
+            try {
+                throw new SaldoInsuficienteException("Saldo insuficiente!");
+            } catch (SaldoInsuficienteException ex) {
+                Logger.getLogger(TicketMachine.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         String result = "*****************\n";
         result += "*** R$ " + saldoMaquina + ",00 ****\n";
