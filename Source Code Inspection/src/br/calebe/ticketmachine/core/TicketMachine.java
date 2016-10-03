@@ -20,6 +20,7 @@ public class TicketMachine {
         System.out.println("Aguarde alguns instantes...");
         this.valorTicket = valor;
         this.saldoMaquina = 0;
+        papeisMoeda = new ArrayList<>();
         papeisMoeda.add(new PapelMoeda(0.1,0));
         papeisMoeda.add(new PapelMoeda(0.25,0));
         papeisMoeda.add(new PapelMoeda(0.5,0));
