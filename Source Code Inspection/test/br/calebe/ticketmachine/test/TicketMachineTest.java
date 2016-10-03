@@ -5,10 +5,8 @@
  */
 package br.calebe.ticketmachine.test;
 
-import br.calebe.ticketmachine.core.PapelMoeda;
-import br.calebe.ticketmachine.core.TicketMachine;
-import br.calebe.ticketmachine.exception.PapelMoedaInvalidaException;
-import br.calebe.ticketmachine.exception.SaldoInsuficienteException;
+import br.calebe.ticketmachine.core.*;
+import br.calebe.ticketmachine.exception.*;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -20,7 +18,7 @@ import static org.junit.Assert.*;
 public class TicketMachineTest {
     
     @Test
-    public void TicketMachineTest(){
+    public void testTicketMachineGetSaldo(){
         TicketMachine tm = new TicketMachine(3);
         tm.inserir(100.0);
         tm.inserir(50.0);
@@ -64,6 +62,7 @@ public class TicketMachineTest {
         }
     }
     
+    
     @Test
     public void testExceptionSaldoInsuficiente(){
         TicketMachine tm = new TicketMachine(3);
@@ -73,5 +72,16 @@ public class TicketMachineTest {
         }catch (Exception e){
             assertEquals(e, SaldoInsuficienteException.class);
         }
+    }
+    @Test
+    public void testTroco(){
+        //Construtor do Troco resulta em looping infinito
+    }
+    @Test
+    public void testInserirTicketMachine(){
+        TicketMachine tm = new TicketMachine(3);
+        tm.inserir(100.0);
+        tm.inserir(20.0);
+        assertEquals(tm.getSaldo()==120.0, true);
     }
 }
